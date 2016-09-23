@@ -1,3 +1,6 @@
+<a href="create.php">Create new item</a>
+</br>
+</br>
 <?php
 $mysqli = new mysqli("localhost", "root", "", "db");
 $res = $mysqli->query("select * from items");
