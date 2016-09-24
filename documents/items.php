@@ -30,7 +30,7 @@
 		<option value="asc">Asc</option>
 		<option value="desc">Desc</option>
 	</select>
-	<input type="submit" value="Submit">
+	<input type="submit" value="Sort">
 </form>
 <table style="width:100%">
   <tr>
@@ -48,7 +48,13 @@ $res = $mysqli->query("select * from items order by $column $order");
 if(!$res)
 	echo "error " . $mysqli->errno . ' ' . $mysqli->error;
 while($row = mysqli_fetch_assoc($res)) {
-	echo "<tr><td>${row['id']}</td><td>${row['name']}</td><td>${row['description']}</td><td>${row['price']}</td></tr>";
+	echo "
+		<tr>
+			<td>${row['id']}</td>
+			<td><a href='item.php?id=${row['id']}'>${row['name']}</a></td>
+			<td>${row['description']}</td>
+			<td>${row['price']}</td>
+		</tr>";
 }
 ?>
 </table>
