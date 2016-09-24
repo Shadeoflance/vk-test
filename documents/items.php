@@ -39,6 +39,7 @@
     <th>Name</th>
 	<th>Description</th>
     <th>Price</th>
+	<th>Delete</th>
   </tr>
 <?php
 $mysqli = new mysqli("localhost", "root", "", "db");
@@ -50,11 +51,12 @@ if(!$res)
 while($row = mysqli_fetch_assoc($res)) {
 	echo "
 		<tr>
-			<td><img src='${row['img_url']}' style='width:128px;height:128px;'></td>
+			<td><img src='${row['img_url']}' style='width:64px;height:64px;'></td>
 			<td>${row['id']}</td>
 			<td><a href='item.php?id=${row['id']}'>${row['name']}</a></td>
 			<td>${row['description']}</td>
 			<td>${row['price']}</td>
+			<td><a href='delete.php?id=${row['id']}'>Delete</a></td>
 		</tr>";
 }
 ?>
