@@ -1,25 +1,37 @@
 <head>
-<style>
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
+	<style>
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+		}
 
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
+		td, th {
+			border: 1px solid #dddddd;
+			text-align: left;
+			padding: 8px;
+		}
 
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
+		tr:nth-child(even) {
+			background-color: #dddddd;
+		}
 </style>
 </head>
 <a href="create.php">Create new item</a>
 </br>
 </br>
+<form>
+	Sorting
+	<select name="column">
+		<option value="id">ID</option>
+		<option value="price">Price</option>
+	</select>
+	<select name="order">
+		<option value="asc">Asc</option>
+		<option value="desc">Desc</option>
+	</select>
+	<input type="submit" value="Submit">
+</form>
 <table style="width:100%">
   <tr>
     <th>ID</th>
@@ -29,7 +41,10 @@ tr:nth-child(even) {
   </tr>
 <?php
 $mysqli = new mysqli("localhost", "root", "", "db");
-$res = $mysqli->query("select * from items");
+$order = array_key_exists('order', $_GET) ? $_GET['order'] : 'asc';
+$column = array_key_exists('column', $_GET) ? $_GET['column'] : 'id';
+echo "select * from items order by $column $order";
+$res = $mysqli->query("select * from items order by $column $order");
 if(!$res)
 	echo "error " . $mysqli->errno . ' ' . $mysqli->error;
 while($row = mysqli_fetch_assoc($res)) {
