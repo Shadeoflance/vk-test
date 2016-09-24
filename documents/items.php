@@ -34,6 +34,7 @@
 </form>
 <table style="width:100%">
   <tr>
+	<th>Image</th>
     <th>ID</th>
     <th>Name</th>
 	<th>Description</th>
@@ -43,13 +44,13 @@
 $mysqli = new mysqli("localhost", "root", "", "db");
 $order = array_key_exists('order', $_GET) ? $_GET['order'] : 'asc';
 $column = array_key_exists('column', $_GET) ? $_GET['column'] : 'id';
-echo "select * from items order by $column $order";
 $res = $mysqli->query("select * from items order by $column $order");
 if(!$res)
 	echo "error " . $mysqli->errno . ' ' . $mysqli->error;
 while($row = mysqli_fetch_assoc($res)) {
 	echo "
 		<tr>
+			<td><img src='${row['img_url']}' style='width:128px;height:128px;'></td>
 			<td>${row['id']}</td>
 			<td><a href='item.php?id=${row['id']}'>${row['name']}</a></td>
 			<td>${row['description']}</td>
