@@ -42,13 +42,7 @@
 	<th>Delete</th>
   </tr>
 <?php
-$mysqli = new mysqli("localhost", "root", "", "db");
-$order = array_key_exists('order', $_GET) ? $_GET['order'] : 'asc';
-$column = array_key_exists('column', $_GET) ? $_GET['column'] : 'id';
-$res = $mysqli->query("select * from items order by $column $order");
-if(!$res)
-	echo "error " . $mysqli->errno . ' ' . $mysqli->error;
-while($row = mysqli_fetch_assoc($res)) {
+function print_row($row) {
 	echo "
 		<tr>
 			<td><img src='${row['img_url']}' style='width:64px;height:64px;'></td>
@@ -58,6 +52,27 @@ while($row = mysqli_fetch_assoc($res)) {
 			<td>${row['price']}</td>
 			<td><a href='delete.php?id=${row['id']}'>Delete</a></td>
 		</tr>";
+}
+
+$order = array_key_exists('order', $_GET) ? $_GET['order'] : 'asc';
+$column = array_key_exists('column', $_GET) ? $_GET['column'] : 'id';
+$memcache = memcache_connect('localhost', 11211);
+if(!($rows = $memcache->get($column))) {
+	$mysqli = new mysqli("localhost", "root", "", "db");
+	$res = $mysqli->query("select * from items order by $column asc");
+	$rows = $res->fetch_all(MYSQLI_ASSOC);
+	$memcache->set($column, $rows, 0, 30);
+}
+if($order == 'asc') {
+	foreach($rows as $row) {
+		print_row($row);
+	}
+}
+else {
+	for (end($rows); key($rows)!==null; prev($rows)){
+		$row = current($rows);
+		print_row($row);
+	}
 }
 ?>
 </table>
