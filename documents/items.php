@@ -56,6 +56,9 @@ function print_row($row) {
 
 $order = array_key_exists('order', $_GET) ? $_GET['order'] : 'asc';
 $column = array_key_exists('column', $_GET) ? $_GET['column'] : 'id';
+$page = array_key_exists('page', $_GET) ? $_GET['page'] : 0;
+$items_per_page = array_key_exists('ipp', $_GET) ? $_GET['ipp'] : 4;
+
 $memcache = memcache_connect('localhost', 11211);
 if(!($rows = $memcache->get($column))) {
 	$mysqli = new mysqli("localhost", "root", "", "db");
@@ -64,15 +67,24 @@ if(!($rows = $memcache->get($column))) {
 	$memcache->set($column, $rows, 0, 30);
 }
 if($order == 'asc') {
-	foreach($rows as $row) {
-		print_row($row);
+	for($i = $page * $items_per_page; $i < $page * $items_per_page + $items_per_page && $i < count($rows) && $i >= 0; $i++) {
+		print_row($rows[$i]);
 	}
 }
 else {
-	for (end($rows); key($rows)!==null; prev($rows)){
-		$row = current($rows);
-		print_row($row);
+	for($i = $page * $items_per_page + $items_per_page - 1; $i > $page * $items_per_page && $i >= 0 && $i < count($rows); $i--) {
+		print_row($rows[$i]);
 	}
 }
 ?>
 </table>
+<?php
+$next_page = $page + 1;
+$prev_page = $page - 1;
+if($prev_page >= 0) {
+	echo "<a href='items.php?page=$prev_page&ipp=$items_per_page&order=$order&column=$column'>Previous page<br></a>";
+}
+if($next_page * $items_per_page < count($rows)) {
+	echo "<a href='items.php?page=$next_page&ipp=$items_per_page&order=$order&column=$column'>Next page</a>";
+}
+?>
