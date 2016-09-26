@@ -23,6 +23,22 @@
 <?php
 	include 'fcache.php';
 
+	function print_page_navigation() {
+		global $page;
+		global $sids;
+		global $items_per_page;
+		global $order;
+		global $column;
+		
+		$next_page = $page + 1;
+		$prev_page = $page - 1;
+		if($prev_page >= 0) {
+			echo "<a href='items.php?page=$prev_page&ipp=$items_per_page&order=$order&column=$column'>Previous page<br></a>";
+		}
+		if($next_page * $items_per_page < strlen($sids) / 4) {
+			echo "<a href='items.php?page=$next_page&ipp=$items_per_page&order=$order&column=$column'>Next page</a>";
+		}
+	}
 	function print_row($id) {
 		global $memcache;
 		global $mysqli;
@@ -75,14 +91,7 @@
 		<br>
 		<input type=\"submit\" value=\"Apply\">
 	</form>";
-	$next_page = $page + 1;
-	$prev_page = $page - 1;
-	if($prev_page >= 0) {
-		echo "<a href='items.php?page=$prev_page&ipp=$items_per_page&order=$order&column=$column'>Previous page<br></a>";
-	}
-	if($next_page * $items_per_page < strlen($sids) / 4) {
-		echo "<a href='items.php?page=$next_page&ipp=$items_per_page&order=$order&column=$column'>Next page</a>";
-	}
+	print_page_navigation();
 ?>
 
 <table style="width:100%">
@@ -104,10 +113,5 @@ for($i = $page * $items_per_page; $i < $page * $items_per_page + $items_per_page
 ?>
 </table>
 <?php
-	if($prev_page >= 0) {
-		echo "<a href='items.php?page=$prev_page&ipp=$items_per_page&order=$order&column=$column'>Previous page<br></a>";
-	}
-	if($next_page * $items_per_page < strlen($sids) / 4) {
-		echo "<a href='items.php?page=$next_page&ipp=$items_per_page&order=$order&column=$column'>Next page</a>";
-	}
+	print_page_navigation();
 ?>

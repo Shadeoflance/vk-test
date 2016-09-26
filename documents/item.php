@@ -4,6 +4,8 @@
 			return;
 		$id = $_GET['id'];
 		$mysqli = new mysqli("localhost", "root", "", "db");
+		//load item from DB instead of cache because it's more consistent and CREATE shouldn't be very requested operation
+		//use prepared statements in order to prevent injection
 		if (!($pst = $mysqli->prepare("select id, price, name, description, img_url from items where id = ?"))) {
 			echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 			return;
@@ -45,7 +47,7 @@
 		$pst->execute();
 		$pst->close();
 		$memcache = memcache_connect('localhost', 11211);
-		$memcache->delete($id);
+		$memcache->delete($id);//delete item so it will be loaded from DB next time
 		echo "Updated successfully.<br><br>
 			<a href='items.php'>Back to items</a>";
 	}

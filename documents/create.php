@@ -8,12 +8,12 @@
   Image URL:<br>
   <input type="text" name="img_url"><br><br>
   <input type="submit" value="Submit">
-  <input type="button" onclick="location.href='items.php';" value="Back to items" />
+  <input type="button" onclick="location.href='items.php';" value="Back to items">
 </form>
 <?php
 	include 'fcache.php';
 	
-	if(!array_key_exists("name", $_POST) || !array_key_exists("price", $_POST)) {
+	if(!array_key_exists("name", $_POST) || !array_key_exists("price", $_POST)) {//check if form is filled
 		return;
 	}
 	$mysqli = new mysqli("localhost", "root", "", "db");

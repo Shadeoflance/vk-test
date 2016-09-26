@@ -7,6 +7,7 @@
 	}
 	$id = $_GET['id'];
 	$mysqli = new mysqli("localhost", "root", "", "db");
+	//use prepared statements in order to prevent injection
 	if (!($pst = $mysqli->prepare("delete from items where id = ?"))) {
 		echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
 		return;
