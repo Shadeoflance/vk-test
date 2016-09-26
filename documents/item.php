@@ -44,6 +44,8 @@
 		$pst->bind_param('sissi', $name, $price, $description, $img_url, $id);
 		$pst->execute();
 		$pst->close();
+		$memcache = memcache_connect('localhost', 11211);
+		$memcache->delete($id);
 		echo "Updated successfully.<br><br>
 			<a href='items.php'>Back to items</a>";
 	}

@@ -11,7 +11,9 @@
   <input type="button" onclick="location.href='items.php';" value="Back to items" />
 </form>
 <?php
-	if(!array_key_exists("name", $_POST)) {
+	include 'fcache.php';
+	
+	if(!array_key_exists("name", $_POST) || !array_key_exists("price", $_POST)) {
 		return;
 	}
 	$mysqli = new mysqli("localhost", "root", "", "db");
@@ -26,5 +28,7 @@
 	$img_url = htmlspecialchars($_POST['img_url']);
 	$pst->execute();
 	$pst->close();
+	
+	reset_cache_ind();
 ?>
 <p>New item successfully added!</p>

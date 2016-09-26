@@ -1,4 +1,6 @@
 <?php
+	include 'fcache.php';
+	
 	if (!array_key_exists('id', $_GET)){
 		echo "No id provided!";
 		return;
@@ -12,6 +14,9 @@
 	$pst->bind_param('i', $id);
 	$pst->execute();
 	$pst->close();
+	
+	reset_cache_ind();
+	
 	echo "Deleted successfully.<br><br>
 		<a href='items.php'>Back to items</a>";
 ?>
