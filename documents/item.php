@@ -1,4 +1,6 @@
 <?php
+	include 'fcache.php';
+	
 	if($_SERVER['REQUEST_METHOD'] == 'GET') {
 		if(!array_key_exists('id', $_GET))
 			return;
@@ -47,6 +49,10 @@
 		$pst->execute();
 		$pst->close();
 		$memcache = memcache_connect('localhost', 11211);
+		$oldPrice = $memcache->get($id)['price'];
+		if($price !== $oldPrice) {//if the price has changed, refresh price index
+			reset_cache_ind(true, false);
+		}
 		$memcache->delete($id);//delete item so it will be loaded from DB next time
 		echo "Updated successfully.<br><br>
 			<a href='items.php'>Back to items</a>";
